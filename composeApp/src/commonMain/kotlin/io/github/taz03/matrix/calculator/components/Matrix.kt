@@ -19,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
@@ -34,7 +33,7 @@ fun Matrix(matrix: D2Array<Int>) {
     val density = LocalDensity.current
     val strokeWidthPx = density.run { 2.dp.toPx() }
 
-    val bracketColor = Color.Black
+    val bracketColor = MaterialTheme.colorScheme.onSurface
 
     Column(
         modifier = Modifier
