@@ -1,18 +1,15 @@
-This is a Kotlin Multiplatform project targeting Web, Desktop.
+# Matrix Calculator
+<img width="1231" alt="Screenshot 2024-11-29 at 11 03 40 PM" src="https://github.com/user-attachments/assets/299f248a-3e5f-454f-8ba1-3fdab9dd9280">
+<img width="1247" alt="Screenshot 2024-11-29 at 11 06 45 PM" src="https://github.com/user-attachments/assets/f5a16158-1292-4cfe-80e3-782ef355d7a0">
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+# Features
+- Additoin
+- Subtraction
+- Dot Product
+- Transpose
+- Light and Dark theme
+- ... more to be added
 
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
-
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [GitHub](https://github.com/JetBrains/compose-multiplatform/issues).
-
-You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle task.
+# Local Setup
+1. Clone the repository
+2. Run `./gradlew run`
