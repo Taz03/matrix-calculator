@@ -4,8 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -48,11 +53,13 @@ sealed interface Screen {
 @Composable
 @Preview
 fun App() {
+    var darkMode by remember { mutableStateOf(false) }
+
     val navController = rememberNavController()
 
     var title by remember { mutableStateOf("Matrix Calculator") }
 
-    MatrixCalculatorTheme(false) {
+    MatrixCalculatorTheme(darkMode) {
         Surface {
             Row {
                 OperationsNavigator(navController)
@@ -62,6 +69,18 @@ fun App() {
                         Column {
                             TopAppBar(
                                 title = { Text(text = title) },
+                                actions = {
+                                    IconButton({ darkMode = !darkMode }) {
+                                        if (darkMode) Icon(
+                                            imageVector = Icons.Default.LightMode,
+                                            contentDescription = "Switch to light mode"
+                                        )
+                                        else Icon(
+                                            imageVector = Icons.Default.DarkMode,
+                                            contentDescription = "Switch to dark mode"
+                                        )
+                                    }
+                                },
                                 colors = TopAppBarDefaults.topAppBarColors(
                                     containerColor = MaterialTheme.colorScheme.surface,
                                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
