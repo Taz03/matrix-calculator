@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.taz03.matrix.calculator.components.LabeledIncDecControls
+import io.github.taz03.matrix.calculator.components.Matrix
 import io.github.taz03.matrix.calculator.screen.determinant.viewmodel.DeterminantViewModel
 
 @Composable
@@ -50,7 +51,11 @@ fun Determinant(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        io.github.taz03.matrix.calculator.components.Determinant(viewModel.matrix)
+        Matrix(
+            matrix = viewModel.matrix,
+            editable = false,
+            determinant = true
+        )
 
         viewModel.determinant?.let {
             Spacer(Modifier.width(10.dp))
