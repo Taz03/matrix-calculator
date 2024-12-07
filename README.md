@@ -7,6 +7,7 @@
 - Subtraction
 - Dot Product
 - Transpose
+- Determinant
 - Light and Dark theme
 - ... more to be added
 
