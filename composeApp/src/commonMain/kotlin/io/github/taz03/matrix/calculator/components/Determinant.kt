@@ -25,7 +25,7 @@ import org.jetbrains.kotlinx.multik.ndarray.data.get
 import org.jetbrains.kotlinx.multik.ndarray.data.set
 
 @Composable
-fun Matrix(matrix: D2Array<Int>, editable: Boolean = true) {
+fun Determinant(matrix: D2Array<Int>) {
     val density = LocalDensity.current
     val strokeWidthPx = density.run { 2.dp.toPx() }
 
@@ -37,8 +37,6 @@ fun Matrix(matrix: D2Array<Int>, editable: Boolean = true) {
             .drawBehind {
                 val width = size.width
                 val height = size.height - strokeWidthPx / 2
-
-                val modifier = .08f
 
                 drawLine(
                     color = bracketColor,
@@ -52,32 +50,6 @@ fun Matrix(matrix: D2Array<Int>, editable: Boolean = true) {
                     end = Offset(width, height),
                     strokeWidth = strokeWidthPx
                 )
-
-                drawLine(
-                    color = bracketColor,
-                    start = Offset(0f, 0f),
-                    end = Offset(width * modifier, 0f),
-                    strokeWidth = strokeWidthPx
-                )
-                drawLine(
-                    color = bracketColor,
-                    start = Offset(width - (width * modifier), 0f),
-                    end = Offset(width, 0f),
-                    strokeWidth = strokeWidthPx
-                )
-
-                drawLine(
-                    color = bracketColor,
-                    start = Offset(0f, height),
-                    end = Offset(width * modifier, height),
-                    strokeWidth = strokeWidthPx
-                )
-                drawLine(
-                    color = bracketColor,
-                    start = Offset(width - (width * modifier), height),
-                    end = Offset(width, height),
-                    strokeWidth = strokeWidthPx
-                )
             }
     ) {
         val (row, column) = matrix.shape
@@ -85,27 +57,21 @@ fun Matrix(matrix: D2Array<Int>, editable: Boolean = true) {
         repeat(row) { i ->
             Row {
                 repeat(column) { j ->
-                    if (editable) {
-                        var input by remember { mutableStateOf(matrix[i, j].toString()) }
-                        BasicTextField(
-                            value = input,
-                            onValueChange = {
-                                input = it
-                                matrix[i, j] = input.trim().toIntOrNull() ?: 0
-                            },
-                            modifier = Modifier.width(40.dp)
-                                .padding(horizontal = 5.dp)
-                                .border(
-                                    width = 1.dp,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    shape = MaterialTheme.shapes.small
-                                )
-                                .padding(5.dp),
-                        )
-                    }
-                    else Text(
-                        text = matrix[i, j].toString(),
-                        modifier = Modifier.padding(horizontal = 5.dp)
+                    var input by remember { mutableStateOf(matrix[i, j].toString()) }
+                    BasicTextField(
+                        value = input,
+                        onValueChange = {
+                            input = it
+                            matrix[i, j] = input.trim().toIntOrNull() ?: 0
+                        },
+                        modifier = Modifier.width(40.dp)
+                            .padding(horizontal = 5.dp)
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                shape = MaterialTheme.shapes.small
+                            )
+                            .padding(5.dp),
                     )
                 }
             }

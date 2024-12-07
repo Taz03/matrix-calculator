@@ -27,7 +27,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.github.taz03.matrix.calculator.screen.addition.Addition
-import io.github.taz03.matrix.calculator.screen.multiplication.Multiplication
+import io.github.taz03.matrix.calculator.screen.determinant.Determinant
+import io.github.taz03.matrix.calculator.screen.dotproduct.DotProduct
 import io.github.taz03.matrix.calculator.screen.subtraction.Subtraction
 import io.github.taz03.matrix.calculator.screen.transpose.Transpose
 import io.github.taz03.matrix.calculator.theme.MatrixCalculatorTheme
@@ -43,10 +44,13 @@ sealed interface Screen {
     data object Subtraction : Screen
 
     @Serializable
-    data object Multiplication : Screen
+    data object DotProduct : Screen
 
     @Serializable
     data object Transpose : Screen
+
+    @Serializable
+    data object Determinant : Screen
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,13 +108,17 @@ fun App() {
                             Subtraction()
                             title = "Subtraction"
                         }
-                        composable<Screen.Multiplication> {
-                            Multiplication()
-                            title = "Multiplication"
+                        composable<Screen.DotProduct> {
+                            DotProduct()
+                            title = "Dot Product"
                         }
                         composable<Screen.Transpose> {
                             Transpose()
                             title = "Transpose"
+                        }
+                        composable<Screen.Determinant> {
+                            Determinant()
+                            title = "Determinant"
                         }
                     }
                 }

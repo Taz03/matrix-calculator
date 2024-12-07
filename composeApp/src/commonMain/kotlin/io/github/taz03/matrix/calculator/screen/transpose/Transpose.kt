@@ -66,7 +66,7 @@ fun Transpose(
             Spacer(Modifier.width(10.dp))
             Text("=")
             Spacer(Modifier.width(10.dp))
-            Matrix(it)
+            Matrix(it, false)
         }
     }
 }

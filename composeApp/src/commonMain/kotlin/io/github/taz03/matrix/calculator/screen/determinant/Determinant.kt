@@ -1,4 +1,4 @@
-package io.github.taz03.matrix.calculator.screen.addition
+package io.github.taz03.matrix.calculator.screen.determinant
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,12 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.taz03.matrix.calculator.components.LabeledIncDecControls
-import io.github.taz03.matrix.calculator.components.Matrix
-import io.github.taz03.matrix.calculator.screen.addition.viewmodel.AdditionViewModel
+import io.github.taz03.matrix.calculator.screen.determinant.viewmodel.DeterminantViewModel
 
 @Composable
-fun Addition(
-    viewModel: AdditionViewModel = viewModel { AdditionViewModel() }
+fun Determinant(
+    viewModel: DeterminantViewModel = viewModel { DeterminantViewModel() }
 ) = Scaffold(
     bottomBar = {
         Row(
@@ -31,19 +30,10 @@ fun Addition(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 LabeledIncDecControls(
-                    label = "Rows",
-                    onDecrementClicked = viewModel::decrementRows,
-                    onIncrementClicked = viewModel::incrementRows,
-                    value = viewModel.rows
-                )
-
-                Spacer(Modifier.width(30.dp))
-
-                LabeledIncDecControls(
-                    label = "Columns",
-                    onDecrementClicked = viewModel::decrementColumns,
-                    onIncrementClicked = viewModel::incrementColumns,
-                    value = viewModel.columns
+                    label = "Side",
+                    onDecrementClicked = viewModel::decrementSide,
+                    onIncrementClicked = viewModel::incrementSide,
+                    value = viewModel.side
                 )
             }
 
@@ -60,17 +50,13 @@ fun Addition(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Matrix(viewModel.matrixA)
-        Spacer(Modifier.width(10.dp))
-        Text("+")
-        Spacer(Modifier.width(10.dp))
-        Matrix(viewModel.matrixB)
+        io.github.taz03.matrix.calculator.components.Determinant(viewModel.matrix)
 
-        viewModel.sum?.let {
+        viewModel.determinant?.let {
             Spacer(Modifier.width(10.dp))
             Text("=")
             Spacer(Modifier.width(10.dp))
-            Matrix(it, false)
+            Text(it.toString())
         }
     }
 }

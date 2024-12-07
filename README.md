@@ -3,7 +3,7 @@
 <img width="1247" alt="Screenshot 2024-11-29 at 11 06 45 PM" src="https://github.com/user-attachments/assets/f5a16158-1292-4cfe-80e3-782ef355d7a0">
 
 # Features
-- Additoin
+- Addition
 - Subtraction
 - Dot Product
 - Transpose

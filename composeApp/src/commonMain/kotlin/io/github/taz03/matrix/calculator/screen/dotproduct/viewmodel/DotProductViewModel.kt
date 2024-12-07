@@ -1,4 +1,4 @@
-package io.github.taz03.matrix.calculator.screen.multiplication.viewmodel
+package io.github.taz03.matrix.calculator.screen.dotproduct.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.multik.ndarray.data.D2Array
 import org.jetbrains.kotlinx.multik.ndarray.data.get
 import org.jetbrains.kotlinx.multik.ndarray.data.set
 
-class MultiplicationViewModel : ViewModel() {
+class DotProductViewModel : ViewModel() {
     var matrixA by mutableStateOf(mk.zeros<Int>(1, 1))
         private set
     var rowsA by mutableStateOf(1)

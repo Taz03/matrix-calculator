@@ -1,9 +1,8 @@
-package io.github.taz03.matrix.calculator.screen.multiplication
+package io.github.taz03.matrix.calculator.screen.dotproduct
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -20,11 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.taz03.matrix.calculator.components.LabeledIncDecControls
 import io.github.taz03.matrix.calculator.components.Matrix
-import io.github.taz03.matrix.calculator.screen.multiplication.viewmodel.MultiplicationViewModel
+import io.github.taz03.matrix.calculator.screen.dotproduct.viewmodel.DotProductViewModel
 
 @Composable
-fun Multiplication(
-    viewModel: MultiplicationViewModel = viewModel { MultiplicationViewModel() }
+fun DotProduct(
+    viewModel: DotProductViewModel = viewModel { DotProductViewModel() }
 ) = Scaffold(
     bottomBar = {
         Row(
@@ -98,7 +97,7 @@ fun Multiplication(
             Spacer(Modifier.width(10.dp))
             Text("=")
             Spacer(Modifier.width(10.dp))
-            Matrix(it)
+            Matrix(it, false)
         }
     }
 }

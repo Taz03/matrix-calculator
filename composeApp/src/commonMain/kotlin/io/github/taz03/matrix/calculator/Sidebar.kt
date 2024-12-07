@@ -44,15 +44,21 @@ fun OperationsNavigator(navController: NavController) = Column(
     )
 
     OperationCard(
-        name = "Multiplication",
-        description = "Multiply two matrices, summing the products of rows and columns",
-        onClick = { navController.navigate(Screen.Multiplication) }
+        name = "Dot Product",
+        description = "Dot Product of two matrices",
+        onClick = { navController.navigate(Screen.DotProduct) }
     )
 
     OperationCard(
         name = "Transpose",
         description = "Transpose a matrix, swapping rows and columns",
         onClick = { navController.navigate(Screen.Transpose) }
+    )
+
+    OperationCard(
+        name = "Determinant",
+        description = "Calculate the determinant of a square matrix",
+        onClick = { navController.navigate(Screen.Determinant) }
     )
 }
 
