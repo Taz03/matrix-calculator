@@ -1,6 +1,6 @@
 # Matrix Calculator
-<img width="1231" alt="Screenshot 2024-11-29 at 11 03 40 PM" src="https://github.com/user-attachments/assets/299f248a-3e5f-454f-8ba1-3fdab9dd9280">
-<img width="1247" alt="Screenshot 2024-11-29 at 11 06 45 PM" src="https://github.com/user-attachments/assets/f5a16158-1292-4cfe-80e3-782ef355d7a0">
+<img width="1249" alt="Screenshot 2024-12-07 at 10 49 57 PM" src="https://github.com/user-attachments/assets/bd3e3f84-5e10-48c7-826b-861942ea9d34">
+<img width="1249" alt="Screenshot 2024-12-07 at 10 50 44 PM" src="https://github.com/user-attachments/assets/42437168-bec4-4353-a962-24602d60ea16">
 
 # Features
 - Addition
