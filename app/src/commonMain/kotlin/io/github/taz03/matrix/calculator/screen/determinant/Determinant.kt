@@ -53,7 +53,7 @@ fun Determinant(
     ) {
         Matrix(
             matrix = viewModel.matrix,
-            editable = false,
+            editable = true,
             determinant = true
         )
 
