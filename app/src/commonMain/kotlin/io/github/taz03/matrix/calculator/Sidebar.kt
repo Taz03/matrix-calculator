@@ -60,6 +60,12 @@ fun OperationsNavigator(navController: NavController) = Column(
         description = "Calculate the determinant of a square matrix",
         onClick = { navController.navigate(Screen.Determinant) }
     )
+
+    OperationCard(
+        name = "Rank",
+        description = "Calculate the rank of a matrix",
+        onClick = { navController.navigate(Screen.Rank) }
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)

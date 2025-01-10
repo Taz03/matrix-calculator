@@ -11,6 +11,31 @@ import org.jetbrains.kotlinx.multik.ndarray.data.get
 import org.jetbrains.kotlinx.multik.ndarray.data.set
 
 class DeterminantViewModel : ViewModel() {
+    companion object {
+        fun calculateDeterminant(m: D2Array<Int>): Double {
+            val n = m.shape[0]
+
+            if (n == 1) return m[0, 0].toDouble()
+            if (n == 2) return (m[0, 0] * m[1, 1]) - (m[0, 1] * m[1, 0]).toDouble()
+
+            var d = 0.0
+            for (col in 0 until n) {
+                val subMatrix = mk.zeros<Int>(n - 1, n - 1)
+                for (i in 1 until n) {
+                    for (j in 0 until n) {
+                        if (j < col) subMatrix[i - 1, j] = m[i, j]
+                        else if (j > col) subMatrix[i - 1, j - 1] = m[i, j]
+                    }
+                }
+
+                val sign = if (col % 2 == 0) 1 else - 1
+                d += sign * m[0, col] * calculateDeterminant(subMatrix)
+            }
+
+            return d
+        }
+    }
+
     var side by mutableStateOf(1)
         private set
 
@@ -34,29 +59,6 @@ class DeterminantViewModel : ViewModel() {
 
     fun calculate() {
         determinant = calculateDeterminant(matrix).toInt()
-    }
-
-    private fun calculateDeterminant(m: D2Array<Int>): Double {
-        val n = m.shape[0]
-
-        if (n == 1) return m[0, 0].toDouble()
-        if (n == 2) return (m[0, 0] * m[1, 1]) - (m[0, 1] * m[1, 0]).toDouble()
-
-        var d = 0.0
-        for (col in 0 until n) {
-            val subMatrix = mk.zeros<Int>(n - 1, n - 1)
-            for (i in 1 until n) {
-                for (j in 0 until n) {
-                    if (j < col) subMatrix[i - 1, j] = m[i, j]
-                    else if (j > col) subMatrix[i - 1, j - 1] = m[i, j]
-                }
-            }
-
-            val sign = if (col % 2 == 0) 1 else - 1
-            d += sign * m[0, col] * calculateDeterminant(subMatrix)
-        }
-
-        return d
     }
 
     private fun reshapeMatrices(oldRow: Int, oldColumn: Int) {

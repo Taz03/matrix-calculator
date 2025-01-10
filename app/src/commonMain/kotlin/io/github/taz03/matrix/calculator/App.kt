@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import io.github.taz03.matrix.calculator.screen.addition.Addition
 import io.github.taz03.matrix.calculator.screen.determinant.Determinant
 import io.github.taz03.matrix.calculator.screen.dotproduct.DotProduct
+import io.github.taz03.matrix.calculator.screen.rank.Rank
 import io.github.taz03.matrix.calculator.screen.subtraction.Subtraction
 import io.github.taz03.matrix.calculator.screen.transpose.Transpose
 import io.github.taz03.matrix.calculator.theme.MatrixCalculatorTheme
@@ -51,6 +52,9 @@ sealed interface Screen {
 
     @Serializable
     data object Determinant : Screen
+
+    @Serializable
+    data object Rank : Screen
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -119,6 +123,10 @@ fun App() {
                         composable<Screen.Determinant> {
                             Determinant()
                             title = "Determinant"
+                        }
+                        composable<Screen.Rank> {
+                            Rank()
+                            title = "Rank"
                         }
                     }
                 }
