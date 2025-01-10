@@ -66,6 +66,12 @@ fun OperationsNavigator(navController: NavController) = Column(
         description = "Calculate the rank of a matrix",
         onClick = { navController.navigate(Screen.Rank) }
     )
+
+    OperationCard(
+        name = "Inverse",
+        description = "Calculate the inverse of a square matrix",
+        onClick = { navController.navigate(Screen.Inverse) }
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)

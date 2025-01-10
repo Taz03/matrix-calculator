@@ -12,11 +12,11 @@ import org.jetbrains.kotlinx.multik.ndarray.data.set
 
 class DeterminantViewModel : ViewModel() {
     companion object {
-        fun calculateDeterminant(m: D2Array<Int>): Double {
+        fun calculateDeterminant(m: D2Array<Int>): Int {
             val n = m.shape[0]
 
-            if (n == 1) return m[0, 0].toDouble()
-            if (n == 2) return (m[0, 0] * m[1, 1]) - (m[0, 1] * m[1, 0]).toDouble()
+            if (n == 1) return m[0, 0]
+            if (n == 2) return (m[0, 0] * m[1, 1]) - (m[0, 1] * m[1, 0])
 
             var d = 0.0
             for (col in 0 until n) {
@@ -32,7 +32,7 @@ class DeterminantViewModel : ViewModel() {
                 d += sign * m[0, col] * calculateDeterminant(subMatrix)
             }
 
-            return d
+            return d.toInt()
         }
     }
 
@@ -49,23 +49,23 @@ class DeterminantViewModel : ViewModel() {
         if (side == 1) return
 
         side--
-        reshapeMatrices(side, side)
+        reshapeMatrices(side)
     }
 
     fun incrementSide() {
         side++
-        reshapeMatrices(side - 1, side - 1)
+        reshapeMatrices(side - 1)
     }
 
     fun calculate() {
-        determinant = calculateDeterminant(matrix).toInt()
+        determinant = calculateDeterminant(matrix)
     }
 
-    private fun reshapeMatrices(oldRow: Int, oldColumn: Int) {
+    private fun reshapeMatrices(oldSide: Int) {
         val matrixANew = mk.zeros<Int>(side, side)
 
-        for (i in 0 until oldRow)
-            for (j in 0 until oldColumn)
+        for (i in 0 until oldSide)
+            for (j in 0 until oldSide)
                 matrixANew[i, j] = matrix[i, j]
 
         matrix = matrixANew

@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.taz03.matrix.calculator.components.LabeledIncDecControls
-import io.github.taz03.matrix.calculator.components.Matrix
+import io.github.taz03.matrix.calculator.components.IntMatrix
 import io.github.taz03.matrix.calculator.screen.dotproduct.viewmodel.DotProductViewModel
 
 @Composable
@@ -90,14 +90,14 @@ fun DotProduct(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Matrix(viewModel.matrixA)
-        Matrix(viewModel.matrixB)
+        IntMatrix(viewModel.matrixA)
+        IntMatrix(viewModel.matrixB)
 
         viewModel.product?.let {
             Spacer(Modifier.width(10.dp))
             Text("=")
             Spacer(Modifier.width(10.dp))
-            Matrix(it, false)
+            IntMatrix(it, false)
         }
     }
 }

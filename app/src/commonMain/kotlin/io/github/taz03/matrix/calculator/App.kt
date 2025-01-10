@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import io.github.taz03.matrix.calculator.screen.addition.Addition
 import io.github.taz03.matrix.calculator.screen.determinant.Determinant
 import io.github.taz03.matrix.calculator.screen.dotproduct.DotProduct
+import io.github.taz03.matrix.calculator.screen.inverse.Inverse
 import io.github.taz03.matrix.calculator.screen.rank.Rank
 import io.github.taz03.matrix.calculator.screen.subtraction.Subtraction
 import io.github.taz03.matrix.calculator.screen.transpose.Transpose
@@ -55,6 +56,9 @@ sealed interface Screen {
 
     @Serializable
     data object Rank : Screen
+
+    @Serializable
+    data object Inverse : Screen
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -127,6 +131,10 @@ fun App() {
                         composable<Screen.Rank> {
                             Rank()
                             title = "Rank"
+                        }
+                        composable<Screen.Inverse> {
+                            Inverse()
+                            title = "Inverse"
                         }
                     }
                 }

@@ -27,24 +27,24 @@ class RankViewModel : ViewModel() {
         if (rows == 1) return
 
         rows--
-        reshapeMatrices(rows, columns)
+        reshapeMatrix(rows, columns)
     }
 
     fun incrementRows() {
         rows++
-        reshapeMatrices(rows - 1, columns)
+        reshapeMatrix(rows - 1, columns)
     }
 
     fun decrementColumns() {
         if (columns == 1) return
 
         columns--
-        reshapeMatrices(rows, columns)
+        reshapeMatrix(rows, columns)
     }
 
     fun incrementColumns() {
         columns++
-        reshapeMatrices(rows, columns - 1)
+        reshapeMatrix(rows, columns - 1)
     }
 
     fun calculate() {
@@ -55,13 +55,11 @@ class RankViewModel : ViewModel() {
 
             for (i in 0..rows - rank) {
                 for (j in 0..columns - rank) {
-                    for (k in 0 until rank) {
-                        for (l in 0 until rank) {
+                    for (k in 0 until rank)
+                        for (l in 0 until rank)
                             subMatrix[k, l] = matrix[i + k, j + l]
-                        }
-                    }
 
-                    if (DeterminantViewModel.calculateDeterminant(subMatrix) != 0.0) {
+                    if (DeterminantViewModel.calculateDeterminant(subMatrix) != 0) {
                         this.rank = rank
                         return
                     }
@@ -74,7 +72,7 @@ class RankViewModel : ViewModel() {
         this.rank = 0
     }
 
-    private fun reshapeMatrices(oldRow: Int, oldColumn: Int) {
+    private fun reshapeMatrix(oldRow: Int, oldColumn: Int) {
         val matrixNew = mk.zeros<Int>(rows, columns)
 
         for (i in 0 until oldRow) {
