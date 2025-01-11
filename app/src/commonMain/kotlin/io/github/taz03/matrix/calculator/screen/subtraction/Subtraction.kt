@@ -16,7 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.taz03.matrix.calculator.components.LabeledIncDecControls
-import io.github.taz03.matrix.calculator.components.IntMatrix
+import io.github.taz03.matrix.calculator.components.Matrix
+import io.github.taz03.matrix.calculator.components.MatrixOnValueChange
 import io.github.taz03.matrix.calculator.screen.subtraction.viewmodel.SubtractionViewModel
 
 @Composable
@@ -60,17 +61,23 @@ fun Subtraction(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IntMatrix(viewModel.matrixA)
+        Matrix(
+            matrix = viewModel.matrixA,
+            onValueChange = MatrixOnValueChange.onIntValueChange(viewModel.matrixA)
+        )
         Spacer(Modifier.width(10.dp))
         Text("-")
         Spacer(Modifier.width(10.dp))
-        IntMatrix(viewModel.matrixB)
+        Matrix(
+            matrix = viewModel.matrixB,
+            onValueChange = MatrixOnValueChange.onIntValueChange(viewModel.matrixB)
+        )
 
         viewModel.difference?.let {
             Spacer(Modifier.width(10.dp))
             Text("=")
             Spacer(Modifier.width(10.dp))
-            IntMatrix(it, false)
+            Matrix(it)
         }
     }
 }

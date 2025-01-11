@@ -16,7 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.taz03.matrix.calculator.components.LabeledIncDecControls
-import io.github.taz03.matrix.calculator.components.IntMatrix
+import io.github.taz03.matrix.calculator.components.Matrix
+import io.github.taz03.matrix.calculator.components.MatrixOnValueChange
 import io.github.taz03.matrix.calculator.screen.determinant.viewmodel.DeterminantViewModel
 
 @Composable
@@ -51,9 +52,9 @@ fun Determinant(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IntMatrix(
+        Matrix(
             matrix = viewModel.matrix,
-            editable = true,
+            onValueChange = MatrixOnValueChange.onIntValueChange(viewModel.matrix),
             determinant = true
         )
 

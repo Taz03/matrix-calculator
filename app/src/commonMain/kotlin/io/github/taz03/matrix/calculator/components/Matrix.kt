@@ -28,114 +28,22 @@ import org.jetbrains.kotlinx.multik.ndarray.data.D2Array
 import org.jetbrains.kotlinx.multik.ndarray.data.get
 import org.jetbrains.kotlinx.multik.ndarray.data.set
 
-@Composable
-fun IntMatrix(matrix: D2Array<Int>, editable: Boolean = true, determinant: Boolean = false) {
-    val density = LocalDensity.current
-    val strokeWidthPx = density.run { 2.dp.toPx() }
+object MatrixOnValueChange {
+    fun onIntValueChange(matrix: D2Array<Int>): ((Int, Int, String) -> Unit) = { i, j, v ->
+        matrix[j, i] = v.trim().toIntOrNull() ?: 0
+    }
 
-    val bracketColor = MaterialTheme.colorScheme.onSurface
-
-    val (row, column) = matrix.shape
-    Row(
-        modifier = Modifier
-            .padding(8.dp)
-            .drawBehind {
-                val width = size.width
-                val height = size.height - strokeWidthPx / 2
-
-                drawLine(
-                    color = bracketColor,
-                    start = Offset(0f, 0f),
-                    end = Offset(0f, height),
-                    strokeWidth = strokeWidthPx
-                )
-                drawLine(
-                    color = bracketColor,
-                    start = Offset(width, 0f),
-                    end = Offset(width, height),
-                    strokeWidth = strokeWidthPx
-                )
-
-                if (!determinant) {
-                    val modifier = when(column) {
-                        1 -> 0.1f
-                        in 2..3 -> 0.06f
-                        in 4..10 -> 0.02f
-                        in 11..20 -> 0.015f
-                        else -> 0.01f
-                    }
-
-                    drawLine(
-                        color = bracketColor,
-                        start = Offset(0f, 0f),
-                        end = Offset(width * modifier, 0f),
-                        strokeWidth = strokeWidthPx
-                    )
-                    drawLine(
-                        color = bracketColor,
-                        start = Offset(width - (width * modifier), 0f),
-                        end = Offset(width, 0f),
-                        strokeWidth = strokeWidthPx
-                    )
-
-                    drawLine(
-                        color = bracketColor,
-                        start = Offset(0f, height),
-                        end = Offset(width * modifier, height),
-                        strokeWidth = strokeWidthPx
-                    )
-                    drawLine(
-                        color = bracketColor,
-                        start = Offset(width - (width * modifier), height),
-                        end = Offset(width, height),
-                        strokeWidth = strokeWidthPx
-                    )
-                }
-            }
-    ) {
-        repeat(column) { i ->
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                repeat(row) { j ->
-                    if (editable) {
-                        var input by remember { mutableStateOf(matrix[j, i].toString()) }
-                        BasicTextField(
-                            value = input,
-                            onValueChange = {
-                                input = it
-                                matrix[j, i] = input.trim().toIntOrNull() ?: 0
-                            },
-                            modifier = Modifier.width(40.dp)
-                                .padding(horizontal = 5.dp)
-                                .border(
-                                    width = 1.dp,
-                                    color = MaterialTheme.colorScheme.outline,
-                                    shape = MaterialTheme.shapes.small
-                                )
-                                .padding(5.dp),
-                            textStyle = TextStyle.Default.copy(
-                                color = MaterialTheme.colorScheme.onSurface
-                            ),
-                            singleLine = true,
-                            cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface)
-                        )
-                    }
-                    else Text(
-                        text = matrix[j, i].toString(),
-                        modifier = Modifier.padding(horizontal = 5.dp)
-                    )
-                }
-            }
-        }
-
-        Spacer(Modifier.height(4.dp))
+    fun onDoubleValueChange(matrix: D2Array<Double>): ((Int, Int, String) -> Unit) = { i, j, v ->
+        matrix[j, i] = v.trim().toDoubleOrNull() ?: 0.0
     }
 }
 
 @Composable
-fun DoubleMatrix(matrix: D2Array<Double>, editable: Boolean = true, determinant: Boolean = false) {
+fun Matrix(
+    matrix: D2Array<*>,
+    onValueChange: ((Int, Int, String) -> Unit)? = null,
+    determinant: Boolean = false
+) {
     val density = LocalDensity.current
     val strokeWidthPx = density.run { 2.dp.toPx() }
 
@@ -163,7 +71,7 @@ fun DoubleMatrix(matrix: D2Array<Double>, editable: Boolean = true, determinant:
                 )
 
                 if (!determinant) {
-                    val modifier = when(column) {
+                    val modifier = when (column) {
                         1 -> 0.1f
                         in 2..3 -> 0.06f
                         in 4..10 -> 0.02f
@@ -205,13 +113,13 @@ fun DoubleMatrix(matrix: D2Array<Double>, editable: Boolean = true, determinant:
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 repeat(row) { j ->
-                    if (editable) {
+                    if (onValueChange != null) {
                         var input by remember { mutableStateOf(matrix[j, i].toString()) }
                         BasicTextField(
                             value = input,
                             onValueChange = {
                                 input = it
-                                matrix[j, i] = input.trim().toDoubleOrNull() ?: 0.0
+                                onValueChange(i, j, input)
                             },
                             modifier = Modifier.width(40.dp)
                                 .padding(horizontal = 5.dp)
@@ -227,8 +135,7 @@ fun DoubleMatrix(matrix: D2Array<Double>, editable: Boolean = true, determinant:
                             singleLine = true,
                             cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface)
                         )
-                    }
-                    else Text(
+                    } else Text(
                         text = matrix[j, i].toString(),
                         modifier = Modifier.padding(horizontal = 5.dp)
                     )

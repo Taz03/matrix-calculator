@@ -20,8 +20,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.taz03.matrix.calculator.components.LabeledIncDecControls
-import io.github.taz03.matrix.calculator.components.DoubleMatrix
-import io.github.taz03.matrix.calculator.components.IntMatrix
+import io.github.taz03.matrix.calculator.components.Matrix
+import io.github.taz03.matrix.calculator.components.MatrixOnValueChange
 import io.github.taz03.matrix.calculator.screen.inverse.viewmodel.InverseViewModel
 
 @Composable
@@ -59,9 +59,9 @@ fun Inverse(viewModel: InverseViewModel = viewModel { InverseViewModel() }) = Sc
         ) {
             Text("A = ")
 
-            IntMatrix(
+            Matrix(
                 matrix = viewModel.matrix,
-                editable = true
+                onValueChange = MatrixOnValueChange.onIntValueChange(viewModel.matrix)
             )
         }
 
@@ -85,7 +85,7 @@ fun Inverse(viewModel: InverseViewModel = viewModel { InverseViewModel() }) = Sc
                     }
                 )
 
-                DoubleMatrix(matrix = it, editable = false)
+                Matrix(matrix = it)
             }
         }
     }
