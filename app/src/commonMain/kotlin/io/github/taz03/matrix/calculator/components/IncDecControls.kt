@@ -31,6 +31,7 @@ fun IncDecControls(
         selected = false,
         onClick = {},
         shape = SegmentedButtonDefaults.itemShape(1, 3),
+        enabled = false,
         icon = {},
         label = { Text(value.toString()) }
     )
