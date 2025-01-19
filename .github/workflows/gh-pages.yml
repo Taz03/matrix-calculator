@@ -26,6 +26,9 @@ jobs:
       - name: Put everything together
         run: mv ./app/build/kotlin-webpack/wasmJs/productionExecutable/composeApp.js ./app/build/processedResources/wasmJs/main & mv ./app/build/kotlin-webpack/wasmJs/productionExecutable/*.wasm ./app/build/processedResources/wasmJs/main
 
+      - name: Debug
+        run: pwd & ls -la ./app/build/processedResources/wasmJs/main
+
       - name: Push to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
