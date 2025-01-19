@@ -1,23 +1,28 @@
 [versions]
-androidx-lifecycle = "2.8.3"
-compose-multiplatform = "1.7.1"
-kotlin = "2.0.21"
-kotlinx-coroutines = "1.9.0"
-navigation-compose = "2.8.0-alpha10"
-kotlinx-serialization = "1.7.3"
+kotlin = "2.1.0"
+compose-multiplatform = "1.7.3"
+
+# KotlinX
+kotlinx-coroutines = "1.10.1"
+kotlinx-serialization = "1.8.0"
 kotlinx-multik = "0.2.3"
 
+# AndroidX
+androidx-lifecycle = "2.9.0-alpha01"
+androidx-navigation = "2.8.0-alpha11"
+
 [libraries]
-androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
-androidx-navigation = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-multik-core = { group = "org.jetbrains.kotlinx", name = "multik-core", version.ref = "kotlinx-multik" }
 kotlinx-multik-default = { group = "org.jetbrains.kotlinx", name = "multik-default", version.ref = "kotlinx-multik" }
 
+androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+androidx-navigation = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
+
 [plugins]
-composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
