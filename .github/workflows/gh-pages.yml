@@ -1,4 +1,4 @@
-name: Compile and push the compiled files only to the compiled branch
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
       - name: Build the production site
         run: ./gradlew wasmJsBrowserDistribution
 
-      - name: Move js and wasm to in same place as html
+      - name: Put everything together
         run: mv ./app/build/kotlin-webpack/wasmJs/productionExecutable/composeApp.js ./app/build/processedResources/wasmJs/main & mv ./app/build/kotlin-webpack/wasmJs/productionExecutable/*.wasm ./app/build/processedResources/wasmJs/main
 
       - name: Push to gh-pages branch
@@ -31,4 +31,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           user_name: ${{ vars.USER_NAME }}
           user_email: <${{ vars.USER_EMAIL }}>
-          publish_dir: ./app/build/processResources/wasmJs/main
+          publish_dir: app/build/processResources/wasmJs/main
