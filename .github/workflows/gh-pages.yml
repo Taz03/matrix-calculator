@@ -31,4 +31,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           user_name: ${{ vars.USER_NAME }}
           user_email: <${{ vars.USER_EMAIL }}>
-          publish_dir: ./composeApp/build/processResources/wasmJs/main
+          publish_dir: ./app/build/processResources/wasmJs/main
