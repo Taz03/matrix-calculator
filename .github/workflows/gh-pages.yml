@@ -30,4 +30,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ../app/build/processResources/wasmJs/main
+          publish_dir: ../app/build/processedResources/wasmJs/main
