@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -61,17 +59,21 @@ fun App() {
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
 
-    var darkMode by remember { mutableStateOf(false) }
+    var theme by remember { mutableStateOf(getTheme()) }
 
-    MatrixCalculatorTheme(darkMode) {
+    MatrixCalculatorTheme(theme == Theme.DARK) {
         val windowSize = calculateWindowSizeClass()
 
         when (windowSize.widthSizeClass) {
             WindowWidthSizeClass.Expanded -> Row(Modifier.fillMaxSize()) {
                 OperationsNavigator(navController)
                 Content(
-                    darkMode = darkMode,
-                    toggleDarkMode = { darkMode = !darkMode },
+                    theme = theme,
+                    onThemeChange = {
+                        val newTheme = if (theme == Theme.DARK) Theme.LIGHT else Theme.DARK
+                        saveTheme(newTheme)
+                        theme = newTheme
+                    },
                     navController = navController
                 )
             }
@@ -84,8 +86,12 @@ fun App() {
                     drawerState = drawerState,
                 ) {
                     Content(
-                        darkMode = darkMode,
-                        toggleDarkMode = { darkMode = !darkMode },
+                        theme = theme,
+                        onThemeChange = {
+                            val newTheme = if (theme == Theme.DARK) Theme.LIGHT else Theme.DARK
+                            saveTheme(newTheme)
+                            theme = newTheme
+                        },
                         navController = navController
                     ) {
                         IconButton({
@@ -108,8 +114,8 @@ fun App() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(
-    darkMode: Boolean,
-    toggleDarkMode: () -> Unit,
+    theme: Theme,
+    onThemeChange: () -> Unit,
     navController: NavHostController,
     navigationIcon: @Composable (() -> Unit) = {}
 ) {
@@ -121,18 +127,7 @@ private fun Content(
                 CenterAlignedTopAppBar(
                     navigationIcon = navigationIcon,
                     title = { Text(text = title) },
-                    actions = {
-                        IconButton(toggleDarkMode) {
-                            if (darkMode) Icon(
-                                imageVector = Icons.Default.LightMode,
-                                contentDescription = "Switch to light mode"
-                            )
-                            else Icon(
-                                imageVector = Icons.Default.DarkMode,
-                                contentDescription = "Switch to dark mode"
-                            )
-                        }
-                    }
+                    actions = { ThemeToggle(theme, onThemeChange) }
                 )
 
                 HorizontalDivider(color = MaterialTheme.colorScheme.outline)

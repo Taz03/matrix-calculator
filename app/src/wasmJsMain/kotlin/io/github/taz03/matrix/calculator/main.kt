@@ -4,10 +4,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
 import kotlinx.browser.document
 
-external fun removeSpinner()
-
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() = ComposeViewport(document.body!!) {
-    removeSpinner()
+    document.getElementById("loader")?.remove()
     App()
 }
