@@ -17,33 +17,46 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BottomBar(
     onCalculate: () -> Unit,
-    content: @Composable () -> Unit,
-) = Row(
-    modifier = Modifier.fillMaxWidth()
-        .background(MaterialTheme.colorScheme.secondaryContainer)
-        .padding(15.dp),
-    horizontalArrangement = Arrangement.SpaceBetween,
-    verticalAlignment = Alignment.CenterVertically
+    content: @Composable RowScope.() -> Unit,
+) = when (calculateWindowSizeClass().widthSizeClass) {
+    WindowWidthSizeClass.Compact -> Column(
+        modifier = Modifier.fillMaxWidth()
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .padding(15.dp),
+    ) {
+        ContentRow(content = content)
+        CalculateButton(
+            onCalculate = onCalculate,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+
+    else -> Row(
+        modifier = Modifier.fillMaxWidth()
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .padding(15.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ContentRow(content = content)
+        CalculateButton(onCalculate)
+    }
+}
+
+@Composable
+private fun ContentRow(content: @Composable RowScope.() -> Unit) = Row(
+    horizontalArrangement = Arrangement.spacedBy(30.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    content = content
+)
+
+@Composable
+private fun CalculateButton(
+    onCalculate: () -> Unit,
+    modifier: Modifier = Modifier
+) = Button(
+    onClick = onCalculate,
+    modifier = modifier
 ) {
-    val windowsSize = calculateWindowSizeClass()
-
-    when (windowsSize.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> Column(
-            verticalArrangement = Arrangement.spacedBy(15.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            content()
-        }
-
-        else -> Row(
-            horizontalArrangement = Arrangement.spacedBy(30.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            content()
-        }
-    }
-
-    Button(onCalculate) {
-        Text("Calculate")
-    }
+    Text("Calculate")
 }

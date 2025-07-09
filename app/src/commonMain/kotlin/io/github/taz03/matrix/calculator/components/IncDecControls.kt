@@ -2,22 +2,18 @@ package io.github.taz03.matrix.calculator.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun IncDecControls(
+    value: Int,
     onDecrementClicked: () -> Unit,
     onIncrementClicked: () -> Unit,
-    value: Int
 ) = SingleChoiceSegmentedButtonRow {
     SegmentedButton(
         selected = false,
@@ -48,13 +44,13 @@ fun IncDecControls(
 @Composable
 fun LabeledIncDecControls(
     label: String,
+    value: Int,
     onDecrementClicked: () -> Unit,
     onIncrementClicked: () -> Unit,
-    value: Int
 ) = Column(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
 ) {
-    IncDecControls(onDecrementClicked, onIncrementClicked, value)
+    IncDecControls(value, onDecrementClicked, onIncrementClicked)
     Text(label)
 }
