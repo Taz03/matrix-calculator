@@ -1,9 +1,8 @@
 package io.github.taz03.matrix.calculator.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 private val lightScheme = lightColorScheme(
@@ -84,10 +83,9 @@ private val darkScheme = darkColorScheme(
 
 @Composable
 fun MatrixCalculatorTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) = MaterialTheme(
     colorScheme = if (darkTheme) darkScheme else lightScheme,
     content = content
 )
-
