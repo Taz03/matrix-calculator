@@ -1,17 +1,14 @@
 package io.github.taz03.matrix.calculator.screen.dotproduct
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,15 +19,19 @@ import io.github.taz03.matrix.calculator.components.Matrix
 import io.github.taz03.matrix.calculator.components.MatrixOnValueChange
 import io.github.taz03.matrix.calculator.screen.dotproduct.viewmodel.DotProductViewModel
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun DotProduct(
     viewModel: DotProductViewModel = viewModel { DotProductViewModel() }
 ) = Scaffold(
     bottomBar = {
+        val windowSize = calculateWindowSizeClass()
         Row(
-            modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer)
+            modifier = Modifier.fillMaxWidth()
+                .background(MaterialTheme.colorScheme.secondaryContainer)
                 .padding(15.dp),
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -76,11 +77,17 @@ fun DotProduct(
                         value = viewModel.columnsB
                     )
                 }
+
+                if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) Button(
+                    onClick = viewModel::calculate,
+                    modifier = Modifier.align(Alignment.End)
+                        .padding(top = 20.dp)
+                ) {
+                    Text("Calculate")
+                }
             }
 
-            Spacer(Modifier.weight(1f))
-
-            Button(onClick = viewModel::calculate) {
+            if (windowSize.widthSizeClass != WindowWidthSizeClass.Compact) Button(onClick = viewModel::calculate) {
                 Text("Calculate")
             }
         }
@@ -95,6 +102,7 @@ fun DotProduct(
             matrix = viewModel.matrixA,
             onValueChange = MatrixOnValueChange.onIntValueChange(viewModel.matrixA)
         )
+        Text("•")
         Matrix(
             matrix = viewModel.matrixB,
             onValueChange = MatrixOnValueChange.onIntValueChange(viewModel.matrixB)

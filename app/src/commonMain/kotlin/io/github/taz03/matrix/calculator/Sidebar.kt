@@ -1,35 +1,26 @@
 package io.github.taz03.matrix.calculator
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.onClick
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
 fun OperationsNavigator(navController: NavController) = Column(
-    Modifier.fillMaxWidth(.2f)
-        .fillMaxHeight()
+    modifier = Modifier.fillMaxHeight()
+        .width(250.dp)
         .background(MaterialTheme.colorScheme.surfaceVariant)
-        .verticalScroll(rememberScrollState())
+        .verticalScroll(rememberScrollState()),
+    verticalArrangement = Arrangement.spacedBy(8.dp)
 ) {
     OperationCard(
         name = "Addition",
@@ -76,38 +67,40 @@ fun OperationsNavigator(navController: NavController) = Column(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OperationCard(name: String, description: String, onClick: () -> Unit) = Box(
-    modifier = Modifier.onClick { onClick() }
+fun OperationCard(name: String, description: String, onClick: () -> Unit) = Column(
+    modifier = Modifier.fillMaxWidth()
         .padding(4.dp)
         .border(
             width = 1.dp,
             color = MaterialTheme.colorScheme.outline,
             shape = MaterialTheme.shapes.medium
         )
+        .clip(MaterialTheme.shapes.medium)
+        .clickable(onClick = onClick)
         .padding(8.dp)
 ) {
-    Column {
-        Row {
-            Text(
-                text = name,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            Spacer(Modifier.weight(1f))
-
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null,
-            )
-        }
-
-        Spacer(Modifier.height(5.dp))
-
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         Text(
-            text = description,
-            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .6f),
-            style = MaterialTheme.typography.bodyMedium
+            text = name,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            style = MaterialTheme.typography.titleLarge
+        )
+
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+            contentDescription = null
         )
     }
+
+    Spacer(Modifier.height(5.dp))
+
+    Text(
+        text = description,
+        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .6f),
+        style = MaterialTheme.typography.bodyMedium
+    )
 }
