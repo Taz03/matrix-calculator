@@ -19,8 +19,7 @@ fun OperationsNavigator(navController: NavController) = Column(
     modifier = Modifier.fillMaxHeight()
         .width(300.dp)
         .background(MaterialTheme.colorScheme.surfaceVariant)
-        .verticalScroll(rememberScrollState()),
-    verticalArrangement = Arrangement.spacedBy(8.dp)
+        .verticalScroll(rememberScrollState())
 ) {
     OperationCard(
         name = "Addition",
