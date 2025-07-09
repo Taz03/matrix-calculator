@@ -7,22 +7,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -34,6 +26,7 @@ import io.github.taz03.matrix.calculator.screen.rank.Rank
 import io.github.taz03.matrix.calculator.screen.subtraction.Subtraction
 import io.github.taz03.matrix.calculator.screen.transpose.Transpose
 import io.github.taz03.matrix.calculator.theme.MatrixCalculatorTheme
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -61,83 +54,123 @@ sealed interface Screen {
     data object Inverse : Screen
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 @Preview
 fun App() {
-    var darkMode by remember { mutableStateOf(false) }
-
+    val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
 
-    var title by remember { mutableStateOf("Matrix Calculator") }
+    var darkMode by remember { mutableStateOf(false) }
 
     MatrixCalculatorTheme(darkMode) {
-        Surface {
-            Row {
+        val windowSize = calculateWindowSizeClass()
+
+        when (windowSize.widthSizeClass) {
+            WindowWidthSizeClass.Expanded -> Row(Modifier.fillMaxSize()) {
                 OperationsNavigator(navController)
+                Content(
+                    darkMode = darkMode,
+                    toggleDarkMode = { darkMode = !darkMode },
+                    navController = navController
+                )
+            }
 
-                Scaffold(
-                    topBar = {
-                        Column {
-                            TopAppBar(
-                                title = { Text(text = title) },
-                                actions = {
-                                    IconButton({ darkMode = !darkMode }) {
-                                        if (darkMode) Icon(
-                                            imageVector = Icons.Default.LightMode,
-                                            contentDescription = "Switch to light mode"
-                                        )
-                                        else Icon(
-                                            imageVector = Icons.Default.DarkMode,
-                                            contentDescription = "Switch to dark mode"
-                                        )
-                                    }
-                                },
-                                colors = TopAppBarDefaults.topAppBarColors(
-                                    containerColor = MaterialTheme.colorScheme.surface,
-                                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                )
-                            )
+            else -> {
+                val drawerState = rememberDrawerState(DrawerValue.Closed)
 
-                            HorizontalDivider(color = MaterialTheme.colorScheme.outline)
-                        }
-                    }
-                ) { padding ->
-                    NavHost(
-                        modifier = Modifier.padding(padding).fillMaxSize(),
-                        navController = navController,
-                        startDestination = Screen.Addition
+                ModalNavigationDrawer(
+                    drawerContent = { OperationsNavigator(navController) },
+                    drawerState = drawerState,
+                ) {
+                    Content(
+                        darkMode = darkMode,
+                        toggleDarkMode = { darkMode = !darkMode },
+                        navController = navController
                     ) {
-                        composable<Screen.Addition> {
-                            Addition()
-                            title = "Addition"
-                        }
-                        composable<Screen.Subtraction> {
-                            Subtraction()
-                            title = "Subtraction"
-                        }
-                        composable<Screen.DotProduct> {
-                            DotProduct()
-                            title = "Dot Product"
-                        }
-                        composable<Screen.Transpose> {
-                            Transpose()
-                            title = "Transpose"
-                        }
-                        composable<Screen.Determinant> {
-                            Determinant()
-                            title = "Determinant"
-                        }
-                        composable<Screen.Rank> {
-                            Rank()
-                            title = "Rank"
-                        }
-                        composable<Screen.Inverse> {
-                            Inverse()
-                            title = "Inverse"
+                        IconButton({
+                            coroutineScope.launch {
+                                drawerState.open()
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "Open navigation drawer"
+                            )
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun Content(
+    darkMode: Boolean,
+    toggleDarkMode: () -> Unit,
+    navController: NavHostController,
+    navigationIcon: @Composable (() -> Unit) = {}
+) {
+    var title by remember { mutableStateOf("Matrix Calculator") }
+
+    Scaffold(
+        topBar = {
+            Column {
+                CenterAlignedTopAppBar(
+                    navigationIcon = navigationIcon,
+                    title = { Text(text = title) },
+                    actions = {
+                        IconButton(toggleDarkMode) {
+                            if (darkMode) Icon(
+                                imageVector = Icons.Default.LightMode,
+                                contentDescription = "Switch to light mode"
+                            )
+                            else Icon(
+                                imageVector = Icons.Default.DarkMode,
+                                contentDescription = "Switch to dark mode"
+                            )
+                        }
+                    }
+                )
+
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline)
+            }
+        }
+    ) {
+        NavHost(
+            modifier = Modifier.padding(it).fillMaxSize(),
+            navController = navController,
+            startDestination = Screen.Addition
+        ) {
+            composable<Screen.Addition> {
+                Addition()
+                title = "Addition"
+            }
+            composable<Screen.Subtraction> {
+                Subtraction()
+                title = "Subtraction"
+            }
+            composable<Screen.DotProduct> {
+                DotProduct()
+                title = "Dot Product"
+            }
+            composable<Screen.Transpose> {
+                Transpose()
+                title = "Transpose"
+            }
+            composable<Screen.Determinant> {
+                Determinant()
+                title = "Determinant"
+            }
+            composable<Screen.Rank> {
+                Rank()
+                title = "Rank"
+            }
+            composable<Screen.Inverse> {
+                Inverse()
+                title = "Inverse"
             }
         }
     }

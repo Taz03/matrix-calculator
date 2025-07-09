@@ -18,6 +18,8 @@ kotlinx-multik-default = { group = "org.jetbrains.kotlinx", name = "multik-defau
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-navigation = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
 
+window-size = { group = "org.jetbrains.compose.material3", name = "material3-window-size-class", version.ref = "compose-multiplatform" }
+
 [plugins]
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

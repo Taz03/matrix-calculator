@@ -44,5 +44,7 @@ kotlin {
 
         implementation(libs.androidx.lifecycle.viewmodel)
         implementation(libs.androidx.navigation)
+
+        implementation(libs.window.size)
     }
 }
