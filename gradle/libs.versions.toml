@@ -3,7 +3,7 @@ kotlin = "2.2.0"
 compose-multiplatform = "1.8.2"
 
 # KotlinX
-kotlinx-serialization = "1.8.1"
+kotlinx-serialization = "1.9.0"
 kotlinx-multik = "0.2.3"
 
 # AndroidX
