@@ -56,9 +56,7 @@ sealed interface Screen {
 @Composable
 @Preview
 fun App() {
-    val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
-
     var theme by remember { mutableStateOf(getTheme()) }
 
     MatrixCalculatorTheme(theme == Theme.DARK) {
@@ -79,6 +77,7 @@ fun App() {
             }
 
             else -> {
+                val coroutineScope = rememberCoroutineScope()
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
 
                 ModalNavigationDrawer(
