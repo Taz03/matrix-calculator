@@ -26,7 +26,6 @@ import io.github.taz03.matrix.calculator.screen.transpose.Transpose
 import io.github.taz03.matrix.calculator.theme.MatrixCalculatorTheme
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Serializable
 sealed interface Screen {
@@ -54,7 +53,6 @@ sealed interface Screen {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-@Preview
 fun App() {
     val navController = rememberNavController()
     var theme by remember { mutableStateOf(getTheme()) }
