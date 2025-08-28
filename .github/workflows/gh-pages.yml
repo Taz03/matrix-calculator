@@ -20,11 +20,8 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Build the production site
-        run: ./gradlew wasmJsBrowserDistribution
-
-      - name: Put everything together
-        run: mv ./app/build/kotlin-webpack/wasmJs/productionExecutable/composeApp.js ./app/build/processedResources/wasmJs/main & mv ./app/build/kotlin-webpack/wasmJs/productionExecutable/*.wasm ./app/build/processedResources/wasmJs/main
+      - name: Build
+        run: ./build.sh
 
       - name: Push to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
