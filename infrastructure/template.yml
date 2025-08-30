@@ -1,3 +1,4 @@
+AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
 Resources:
@@ -7,69 +8,24 @@ Resources:
       BucketName: !Sub ${AWS::StackName}-bucket-${AWS::AccountId}
       BucketEncryption:
         ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: aws:kms
-              KMSMasterKeyID: alias/aws/s3
+          - BucketKeyEnabled: true
+            ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
       PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-  BucketBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref Bucket
-      PolicyDocument:
-        Id: RequireEncryptionInTransit
-        Version: '2012-10-17'
-        Statement:
-          - Principal: '*'
-            Action: '*'
-            Effect: Deny
-            Resource:
-              - !GetAtt Bucket.Arn
-              - !Sub ${Bucket.Arn}/*
-            Condition:
-              Bool:
-                aws:SecureTransport: 'false'
-
-  Distribution:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        DefaultCacheBehavior:
-          TargetOriginId: MyCDN
-          ViewerProtocolPolicy: allow-all
-          AllowedMethods:
-            - GET
-            - HEAD
-            - OPTIONS
-          CachedMethods:
-            - GET
-            - HEAD
-          CachePolicyId: !Ref EncodingCachePolicy
-          FunctionAssociations:
-            - EventType: viewer-request
-              FunctionARN: !GetAtt EncodingRouter.FunctionMetadata.FunctionARN
-        Enabled: true
-        Origins:
-          - DomainName: !GetAtt Bucket.RegionalDomainName
-            Id: MyCDN
-            S3OriginConfig:
-              OriginAccessIdentity: !Sub
-                - origin-access-identity/cloudfront/${OriginAccessIdentity}
-                - OriginAccessIdentity: !Ref DistributionOriginAccessIdentity
-  DistributionOriginAccessIdentity:
-    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
-    Properties:
-      CloudFrontOriginAccessIdentityConfig:
-        Comment: MyCDN
   DistributionBucketPolicy:
     Type: AWS::S3::BucketPolicy
+    DependsOn: Distribution
     Properties:
       Bucket: !Ref Bucket
       PolicyDocument:
         Version: '2012-10-17'
+        Id: PolicyForCloudFrontPrivateContent
         Statement:
-          - Sid: AllowCloudFrontServicePrincipalReadOnly
+          - Sid: AllowCloudFrontServicePrincipal
             Effect: Allow
             Principal:
               Service: cloudfront.amazonaws.com
@@ -78,46 +34,34 @@ Resources:
             Condition:
               StringEquals:
                 AWS:SourceArn: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}
-          - Sid: AllowLegacyOAIReadOnly
-            Effect: Allow
-            Principal:
-              AWS: !Sub arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${DistributionOriginAccessIdentity}
-            Action: s3:GetObject
-            Resource: !Sub arn:aws:s3:::${Bucket}/*
 
-  EncodingRouter:
-    Type: AWS::CloudFront::Function
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
     Properties:
-      FunctionConfig:
-        Comment: Rewrites URI to .zst or .gzip based on Accept-Encoding
-        Runtime: cloudfront-js-2.0
-      AutoPublish: true
-      FunctionCode: |
-        function handler(event) {
-          var request = event.request;
-          var encodingHeader = request.headers['accept-encoding'];
-
-          if (!encodingHeader) return request;
-          request.uri += encodingHeader.value.includes('zstd') ? '.zst' : '.gzip';
-
-          return request;
-        }
-      Name: !Sub ${AWS::StackName}-ContentNegotiationFunction
-  EncodingCachePolicy:
-    Type: AWS::CloudFront::CachePolicy
+      OriginAccessControlConfig:
+        SigningBehavior: always
+        OriginAccessControlOriginType: s3
+        SigningProtocol: sigv4
+        Name: !Sub oac-${Bucket}
+  Distribution:
+    Type: AWS::CloudFront::Distribution
     Properties:
-      CachePolicyConfig:
-        MinTTL: 600
-        MaxTTL: 31536000
-        ParametersInCacheKeyAndForwardedToOrigin:
-          HeadersConfig:
-            HeaderBehavior: whitelist
-            Headers:
-              - Accept-Encoding
-          CookiesConfig:
-            CookieBehavior: none
-          QueryStringsConfig:
-            QueryStringBehavior: none
-          EnableAcceptEncodingGzip: false
-        DefaultTTL: 86400
-        Name: !Sub ${AWS::StackName}-CacheOnAcceptEncodingPolicy
+      Tags:
+        - Key: Name
+          Value: !Ref Bucket
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - DomainName: !GetAtt Bucket.RegionalDomainName
+            Id: !Ref Bucket
+            OriginAccessControlId: !GetAtt OriginAccessControl.Id
+            S3OriginConfig: {}
+        DefaultCacheBehavior:
+          TargetOriginId: !Ref Bucket
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+        HttpVersion: http2
