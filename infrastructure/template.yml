@@ -63,5 +63,44 @@ Resources:
           AllowedMethods:
             - GET
             - HEAD
-          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
-        HttpVersion: http2
+          CachePolicyId: !Ref OptimizedEncodingCachePolicy
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt EncodingRouter.FunctionMetadata.FunctionARN
+        HttpVersion: http2and3
+
+  EncodingRouter:
+    Type: AWS::CloudFront::Function
+    Properties:
+      FunctionConfig:
+        Comment: Rewrites URI to .zst or .gzip based on Accept-Encoding
+        Runtime: cloudfront-js-2.0
+      AutoPublish: true
+      FunctionCode: |
+        function handler(event) {
+          var request = event.request;
+          var encodingHeader = request.headers['accept-encoding'];
+          if (/.*\.(html|css)$/i.test(request.uri) || !encodingHeader) return request;
+
+          request.uri += encodingHeader.value.includes('zstd') ? '.zst' : '.gz';
+          return request;
+        }
+      Name: !Sub ${AWS::StackName}-ContentNegotiationFunction
+
+  OptimizedEncodingCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Name: !Sub ${AWS::StackName}-EncodingRouterPolicy
+        DefaultTTL: 86400 # 1 day
+        MaxTTL: 31536000 # 1 year
+        MinTTL: 0 # Allows origin Cache-Control headers to take precedence
+        ParametersInCacheKeyAndForwardedToOrigin:
+          HeadersConfig:
+            HeaderBehavior: none
+          CookiesConfig:
+            CookieBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
+          EnableAcceptEncodingGzip: false
+          EnableAcceptEncodingBrotli: false
