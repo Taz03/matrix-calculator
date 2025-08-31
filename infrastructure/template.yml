@@ -63,7 +63,7 @@ Resources:
           AllowedMethods:
             - GET
             - HEAD
-          CachePolicyId: !Ref OptimizedEncodingCachePolicy
+          CachePolicyId: b2884449-e4de-46a7-ac36-70bc7f1ddd6d # CachingOptimizedForUncompressedObjects
           FunctionAssociations:
             - EventType: viewer-request
               FunctionARN: !GetAtt EncodingRouter.FunctionMetadata.FunctionARN
@@ -80,27 +80,9 @@ Resources:
         function handler(event) {
           var request = event.request;
           var encodingHeader = request.headers['accept-encoding'];
-          if (/.*\.(html|css)$/i.test(request.uri) || !encodingHeader) return request;
+          if (!/.*\.(js|wasm)$/i.test(request.uri) || !encodingHeader) return request;
 
           request.uri += encodingHeader.value.includes('zstd') ? '.zst' : '.gz';
           return request;
         }
       Name: !Sub ${AWS::StackName}-ContentNegotiationFunction
-
-  OptimizedEncodingCachePolicy:
-    Type: AWS::CloudFront::CachePolicy
-    Properties:
-      CachePolicyConfig:
-        Name: !Sub ${AWS::StackName}-EncodingRouterPolicy
-        DefaultTTL: 86400 # 1 day
-        MaxTTL: 31536000 # 1 year
-        MinTTL: 0 # Allows origin Cache-Control headers to take precedence
-        ParametersInCacheKeyAndForwardedToOrigin:
-          HeadersConfig:
-            HeaderBehavior: none
-          CookiesConfig:
-            CookieBehavior: none
-          QueryStringsConfig:
-            QueryStringBehavior: none
-          EnableAcceptEncodingGzip: false
-          EnableAcceptEncodingBrotli: false
