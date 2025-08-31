@@ -10,5 +10,10 @@ if [[ "$(uname)" == "Darwin" ]]; then
   alias sed=gsed
 fi
 
-sed -i '0,/p+"[a-z0-9]*\.wasm"/s//p+"composeApp.wasm"/' ./app/build/processedResources/wasmJs/main/composeApp.js
-sed -i '0,/p+"[a-z0-9]*\.wasm"/s//p+"skiko.wasm"/' ./app/build/processedResources/wasmJs/main/composeApp.js
+cd ./app/build/processedResources/wasmJs/main || exit
+
+sed -i '0,/p+"[a-z0-9]*\.wasm"/s//p+"composeApp.wasm"/' ./composeApp.js
+sed -i '0,/p+"[a-z0-9]*\.wasm"/s//p+"skiko.wasm"/' ./composeApp.js
+
+gzip -k --best ./*.js ./*.wasm
+zstd -k -15 ./*.js ./*.wasm

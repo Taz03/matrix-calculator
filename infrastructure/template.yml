@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-bucket-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - BucketKeyEnabled: true
+            ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+  DistributionBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DependsOn: Distribution
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Id: PolicyForCloudFrontPrivateContent
+        Statement:
+          - Sid: AllowCloudFrontServicePrincipal
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub arn:aws:s3:::${Bucket}/*
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}
+
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        SigningBehavior: always
+        OriginAccessControlOriginType: s3
+        SigningProtocol: sigv4
+        Name: !Sub oac-${Bucket}
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref Bucket
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - DomainName: !GetAtt Bucket.RegionalDomainName
+            Id: !Ref Bucket
+            OriginAccessControlId: !GetAtt OriginAccessControl.Id
+            S3OriginConfig: {}
+        DefaultCacheBehavior:
+          TargetOriginId: !Ref Bucket
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachePolicyId: b2884449-e4de-46a7-ac36-70bc7f1ddd6d # CachingOptimizedForUncompressedObjects
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt EncodingRouter.FunctionMetadata.FunctionARN
+        HttpVersion: http2and3
+
+  EncodingRouter:
+    Type: AWS::CloudFront::Function
+    Properties:
+      FunctionConfig:
+        Comment: Rewrites URI to .zst or .gzip based on Accept-Encoding
+        Runtime: cloudfront-js-2.0
+      AutoPublish: true
+      FunctionCode: |
+        function handler(event) {
+          var request = event.request;
+          var encodingHeader = request.headers['accept-encoding'];
+          if (!/.*\.(js|wasm)$/i.test(request.uri) || !encodingHeader) return request;
+
+          request.uri += encodingHeader.value.includes('zstd') ? '.zst' : '.gz';
+          return request;
+        }
+      Name: !Sub ${AWS::StackName}-ContentNegotiationFunction
