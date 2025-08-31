@@ -21,7 +21,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build
-        run: ./build.sh
+        run: ./scripts/build.sh
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
