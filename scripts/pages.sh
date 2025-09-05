@@ -8,5 +8,7 @@ cd ./app/build/processedResources/wasmJs/main || exit
 
 rm ./*.js* ./*.wasm*
 
-sed -i "s/composeApp.wasm/$CLOUDFRONT_URL\/composeApp.wasm/" ./index.html
-sed -i "s/skiko.wasm/$CLOUDFRONT_URL\/skiko.wasm/" ./index.html
+URL=$(echo "$CLOUDFRONT_URL" | sed 's/\//\\\//g')
+
+sed -i "s/composeApp.wasm/$URL\/composeApp.wasm/" ./index.html
+sed -i "s/skiko.wasm/$URL\/skiko.wasm/" ./index.html
