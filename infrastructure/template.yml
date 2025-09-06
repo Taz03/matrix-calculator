@@ -1,6 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
+Parameters:
+  CORSAllowedOrigins:
+    Type: CommaDelimitedList
+    Description: "CORS allowed origins, in CSV format"
+
 Resources:
   Bucket:
     Type: AWS::S3::Bucket
@@ -63,6 +68,7 @@ Resources:
           AllowedMethods:
             - GET
             - HEAD
+          ResponseHeadersPolicyId: !Ref CORSHeaderPolicy
           CachePolicyId: b2884449-e4de-46a7-ac36-70bc7f1ddd6d # CachingOptimizedForUncompressedObjects
           FunctionAssociations:
             - EventType: viewer-request
@@ -86,3 +92,21 @@ Resources:
           return request;
         }
       Name: !Sub ${AWS::StackName}-ContentNegotiationFunction
+
+  CORSHeaderPolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub ${AWS::StackName}-CORSHeaderPolicy
+        CorsConfig:
+          AccessControlAllowCredentials: false
+          AccessControlAllowHeaders:
+            Items:
+              - '*'
+          AccessControlAllowMethods:
+            Items:
+              - GET
+              - OPTIONS
+          AccessControlAllowOrigins:
+            Items: !Ref CORSAllowedOrigins
+          OriginOverride: false
