@@ -1,10 +1,13 @@
 [versions]
 kotlin = "2.2.0"
-compose-multiplatform = "1.8.2"
 
 # KotlinX
 kotlinx-serialization = "1.9.0"
 kotlinx-multik = "0.2.3"
+
+# Compose
+compose-multiplatform = "1.9.0"
+compose-material3 = "1.9.0-beta06"
 
 # AndroidX
 androidx-lifecycle = "2.9.1"
@@ -15,10 +18,11 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-multik-core = { group = "org.jetbrains.kotlinx", name = "multik-core", version.ref = "kotlinx-multik" }
 kotlinx-multik-default = { group = "org.jetbrains.kotlinx", name = "multik-default", version.ref = "kotlinx-multik" }
 
+compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "compose-material3" }
+compose-window-size = { group = "org.jetbrains.compose.material3", name = "material3-window-size-class", version.ref = "compose-material3" }
+
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-navigation = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
-
-window-size = { group = "org.jetbrains.compose.material3", name = "material3-window-size-class", version.ref = "compose-multiplatform" }
 
 [plugins]
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

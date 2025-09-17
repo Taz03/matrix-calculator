@@ -32,7 +32,6 @@ kotlin {
     sourceSets.commonMain.dependencies {
         implementation(compose.runtime)
         implementation(compose.foundation)
-        implementation(compose.material3)
         implementation(compose.ui)
         implementation(compose.materialIconsExtended)
 
@@ -40,9 +39,10 @@ kotlin {
         implementation(libs.kotlinx.multik.core)
         implementation(libs.kotlinx.multik.default)
 
+        implementation(libs.compose.material3)
+        implementation(libs.compose.window.size)
+
         implementation(libs.androidx.lifecycle.viewmodel)
         implementation(libs.androidx.navigation)
-
-        implementation(libs.window.size)
     }
 }
